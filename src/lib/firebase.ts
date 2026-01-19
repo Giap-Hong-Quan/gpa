@@ -2,14 +2,14 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC8J3czTRxKaYp0i_yTVT-5L1T3LJD5BEY",
-  authDomain: "tinhgpa-1d515.firebaseapp.com",
-  databaseURL: "https://tinhgpa-1d515-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "tinhgpa-1d515",
-  storageBucket: "tinhgpa-1d515.firebasestorage.app",
-  messagingSenderId: "694939849244",
-  appId: "1:694939849244:web:19381b92492fe7addf05d9",
-  measurementId: "G-Y2JV22XG7H"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
