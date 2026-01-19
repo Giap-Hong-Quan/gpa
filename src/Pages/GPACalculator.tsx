@@ -253,7 +253,7 @@ export default function GPACalculator() {
       {i === 1 && (
         <div className="ml-10"> {/* Đẩy vào lề để thẳng hàng với text */}
           <img 
-            src="../../public/step2.jpg" // Thay bằng đường dẫn ảnh của bạn
+            src="/step2.jpg" // Thay bằng đường dẫn ảnh của bạn
             alt="Hướng dẫn chia sẻ Shopee"
             className="rounded-xl border border-slate-100 shadow-sm w-full max-w-[200px] object-cover"
           />

@@ -18,7 +18,7 @@ export function Navigation() {
         {/* Logo Section */}
         <div className="flex items-center gap-1">
           <div className="w-12 h-12 flex items-center justify-center">
-            <img src="../../public/logo.png" alt="logo" />
+            <img src="/logo.png" alt="logo" />
           </div>
           <span className="font-display font-bold text-xl tracking-tight text-slate-800 hidden sm:block">
             UniHelper
