@@ -85,6 +85,13 @@ export function MaterialCard({ material }: { material: Material }) {
                 <ShoppingBag className="w-5 h-5" /> LẤY MÃ TRÊN SHOPEE
               </a>
 
+  <a 
+                   href="/"
+                    target="_blank"
+                    className="flex items-center justify-center gap-3 rounded-xl btn-secondary text-center text-sm py-3 mb-3 transition-colors"
+                  >
+                    Hướng dẫn Lấy Mã 
+                  </a>
               <input
                 type="text"
                 value={userInput}

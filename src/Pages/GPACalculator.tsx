@@ -38,7 +38,7 @@ export default function GPACalculator() {
     const MASTER_CODE = "UNI123";
     e.preventDefault();
     if (formData.shopeeCode !== MASTER_CODE && formData.shopeeCode !== "AUH-SEP-GEY") {
-     toast.warning("Vui lòng nhập mã xác nhận")
+     toast.error("Vui lòng nhập mã xác nhận hoặc không chính xác")
       return;
     }
 
