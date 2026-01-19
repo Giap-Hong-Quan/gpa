@@ -20,7 +20,7 @@ const TARGET_LEVELS_10 = [
 
 export default function GPACalculator() {
   const [system, setSystem] = useState<4 | 10>(4);
-  const linkshope="https://s.shopee.vn/9AIV6VxFVl"
+  const linkshope="https://s.shopee.vn/3LKiA01HTq"
   const [formData, setFormData] = useState({
     currentGpa: "",
     totalCredits: "120",
