@@ -1,4 +1,3 @@
-// Định nghĩa cấu trúc dữ liệu cho Tài liệu
 export interface Material {
   id: string;
   title: string;
@@ -7,4 +6,5 @@ export interface Material {
   code: string;
   downloadUrl: string;
   shopeeLink: string;
+  secretCode: string; // Thêm trường này để so sánh
 }
