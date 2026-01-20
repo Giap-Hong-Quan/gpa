@@ -34,79 +34,128 @@ export default function GPACalculator() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCalculate = (e: React.FormEvent) => {
-    const MASTER_CODE = "UNI123";
-    e.preventDefault();
-    if (formData.shopeeCode !== MASTER_CODE && formData.shopeeCode !== "AUH-SEP-GEY") {
-     toast.error("Vui lòng nhập mã xác nhận hoặc không chính xác")
-      return;
-    }
+const handleCalculate = (e: React.FormEvent) => {
+  const MASTER_CODE = "UNI123";
+  e.preventDefault();
+  
+  // Kiểm tra mã xác nhận (Shopee Code)
+  if (formData.shopeeCode !== MASTER_CODE && formData.shopeeCode !== "AUH-SEP-GEY") {
+    toast.error("Vui lòng nhập mã xác nhận chính xác để mở khóa lộ trình!");
+    return;
+  }
 
-    const currentGpa = parseFloat(formData.currentGpa) || 0;
-    const totalCredits = parseInt(formData.totalCredits) || 0;
-    const earnedCredits = parseInt(formData.earnedCredits) || 0;
-    const targetGpa = parseFloat(formData.targetGpa) || 0;
-    const remainingCredits = totalCredits - earnedCredits;
-    
-    if (remainingCredits <= 0) {
-      setResult("Bạn đã hoàn thành chương trình học!");
-      return;
-    }
+  // Chuyển đổi dữ liệu từ form
+  const currentGpa = parseFloat(formData.currentGpa) || 0;
+  const totalCredits = parseInt(formData.totalCredits) || 120;
+  const earnedCredits = parseInt(formData.earnedCredits) || 0;
+  const targetGpa = parseFloat(formData.targetGpa) || 0;
+  const remainingCredits = totalCredits - earnedCredits;
+  
+  // Kiểm tra nếu đã hoàn thành chương trình học
+  if (remainingCredits <= 0) {
+    setResult(`
+      <div className="text-center space-y-3">
+        <h3 className="text-2xl font-black text-green-400">🎓 HÀNH TRÌNH VIÊN MÃN!</h3>
+        <p className="text-sm">Bạn đã hoàn thành đủ số tín chỉ rồi. Giờ là lúc tận hưởng thành quả và chờ ngày xướng tên nhận bằng thôi!</p>
+      </div>
+    `);
+    return;
+  }
 
-    const currentPoints = currentGpa * earnedCredits;
-    const targetTotalPoints = targetGpa * totalCredits;
-    const requiredPoints = targetTotalPoints - currentPoints;
-    const requiredGpa = requiredPoints / remainingCredits;
+  // Logic tính toán điểm cần đạt (Required GPA)
+  const currentPoints = currentGpa * earnedCredits;
+  const targetTotalPoints = targetGpa * totalCredits;
+  const requiredPoints = targetTotalPoints - currentPoints;
+  const requiredGpa = requiredPoints / remainingCredits;
 
-    const maxGrade = system === 4 ? 4.0 : 10.0;
-    const suggest3 = Math.min(maxGrade, requiredGpa + 0.2).toFixed(2);
-    const suggest2 = Math.max(0, requiredGpa - 0.3).toFixed(2);
+  const maxGrade = system === 4 ? 4.0 : 10.0;
+  
+  // Gợi ý mục tiêu môn học cụ thể
+  const suggest3 = Math.min(maxGrade, requiredGpa + 0.1).toFixed(2);
+  const suggest2 = Math.max(0, requiredGpa - 0.2).toFixed(2);
 
+  // --- PHÂN LOẠI KẾT QUẢ VÀ HIỂN THỊ ---
+
+  // TRƯỜNG HỢP 1: BẤT KHẢ THI (Điểm cần đạt > Hệ điểm tối đa)
   if (requiredGpa > maxGrade) {
     setResult(`
       <div className="space-y-4">
-        <h3 className="text-xl md:text-2xl font-black uppercase">🚧 Đường còn dài, ta đổi hướng đi!</h3>
-        <p className="text-sm md:text-base">Mức điểm **${requiredGpa.toFixed(2)}** hiện tại quá cao. Hãy cân nhắc học cải thiện!</p>
+        <h3 className="text-xl md:text-2xl font-black uppercase text-yellow-300 text-center">🛑 TOANG RỒI ÔNG GIÁO Ạ!</h3>
+        <p className="text-sm leading-relaxed text-center">
+          Toán học không biết nói dối: Bạn cần đạt trung bình **${requiredGpa.toFixed(2)}** điểm mỗi kỳ tới. 
+          Nhưng khổ nỗi hệ điểm của trường tối đa chỉ có **${maxGrade.toFixed(1)}** thôi! 
+        </p>
+        
+        <div className="bg-red-500/30 p-4 rounded-2xl border border-red-400/50">
+          <p className="font-bold text-sm mb-1 text-red-200">🧐 Tại sao lại thế?</p>
+          <p className="text-[11px] opacity-90">Vì số tín chỉ còn lại quá ít, dù bạn có đạt điểm tuyệt đối tất cả các môn cũng không "gánh" nổi mục tiêu này.</p>
+        </div>
+
         <div className="bg-white/20 p-4 rounded-2xl border border-white/30">
-          <p className="font-bold text-sm">💡 Chiến thuật "Hồi sinh":</p>
-          <ul className="text-xs list-disc ml-5 mt-2">
-            <li>Đăng ký <b>học cải thiện</b> các môn điểm D, F.</li>
-            <li>Đây là cách nhanh nhất để giảm áp lực điểm số.</li>
+          <p className="font-bold text-sm text-indigo-200">💡 Kế hoạch "Hồi sinh":</p>
+          <ul className="text-xs list-disc ml-5 mt-2 space-y-2">
+            <li>Ưu tiên <b>đăng ký học cải thiện</b> các môn điểm D, F ở kỳ cũ để "hack" lại điểm tích lũy nhanh nhất.</li>
+            <li>Điều chỉnh mục tiêu xuống một bậc (ví dụ từ Giỏi xuống Khá) để bảo toàn tâm lý cho các kỳ cuối.</li>
           </ul>
         </div>
       </div>
     `);
-  } else if (requiredGpa > maxGrade * 0.85) {
+  } 
+  
+  // TRƯỜNG HỢP 2: RẤT KHÓ (Cần nỗ lực cực lớn - Chế độ sinh tồn)
+  else if (requiredGpa > maxGrade * 0.85) {
     setResult(`
       <div className="space-y-4">
-        <h3 className="text-xl md:text-2xl font-black uppercase">🔥 Chế độ "Sinh tồn"</h3>
-        <p className="text-sm md:text-base">GPA mục tiêu mỗi kỳ: **${requiredGpa.toFixed(2)}**.</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-          <div className="bg-white/20 p-3 rounded-xl text-center">
-            <p className="text-[10px] uppercase opacity-70">Môn 3 tín chỉ</p>
-            <p className="text-lg font-black">Target: ${suggest3}</p>
+        <h3 className="text-xl md:text-2xl font-black uppercase text-orange-400 text-center">🔥 CHẾ ĐỘ "SUPER SAIYAN"</h3>
+        <p className="text-sm text-center">
+          GPA mục tiêu mỗi kỳ tới là **${requiredGpa.toFixed(2)}**. Bạn đang đứng giữa ranh giới của một sinh viên ưu tú và một huyền thoại "vượt khó" đấy!
+        </p>
+        
+        <div className="grid grid-cols-2 gap-3 mt-4 text-center">
+          <div className="bg-white/20 p-3 rounded-xl border border-white/40">
+            <p className="text-[10px] uppercase opacity-70">Target Môn 3 Tín</p>
+            <p className="text-lg font-black text-green-300">Điểm A / A+</p>
           </div>
-          <div className="bg-white/20 p-3 rounded-xl text-center">
-            <p className="text-[10px] uppercase opacity-70">Môn 2 tín chỉ</p>
-            <p className="text-lg font-black">Target: ${suggest2}</p>
+          <div className="bg-white/20 p-3 rounded-xl border border-white/40">
+            <p className="text-[10px] uppercase opacity-70">Target Môn 2 Tín</p>
+            <p className="text-lg font-black text-green-300">Điểm B+ / A</p>
           </div>
+        </div>
+
+        <div className="p-3 bg-indigo-900/40 rounded-xl border border-indigo-400/30">
+          <p className="text-[11px] italic leading-tight text-center">
+            "Kỷ luật là ánh sáng cuối con đường." Hãy tập trung tiêu diệt các môn nhiều tín chỉ trước, chúng là 'trùm cuối' quyết định vận mệnh của bạn!
+          </p>
         </div>
       </div>
     `);
-  } else {
+  } 
+  
+  // TRƯỜNG HỢP 3: KHẢ THI (Dễ dàng đạt được)
+  else {
     setResult(`
       <div className="space-y-4">
-        <h3 className="text-xl md:text-2xl font-black uppercase">🚀 Tăng tốc về đích!</h3>
-        <p className="text-sm md:text-base">Chỉ cần **${requiredGpa.toFixed(2)}**, bạn sẽ đạt được mục tiêu.</p>
-        <div className="bg-white/20 p-4 rounded-2xl">
-          <p className="font-bold text-sm">✨ Công thức chiến thắng:</p>
-          <p className="text-xs mt-2">Môn 3 tín: <b>${requiredGpa.toFixed(1)}</b>, môn 2 tín: <b>${(requiredGpa - 0.2).toFixed(1)}</b>.</p>
+        <h3 className="text-xl md:text-2xl font-black uppercase text-green-400 text-center">🚀 ĐƯỜNG VỀ ĐÍCH CỰC GẦN!</h3>
+        <p className="text-sm text-center">
+          Chỉ cần duy trì mức **${requiredGpa.toFixed(2)}**, tấm bằng **${formData.targetGpa}** coi như đã nằm chắc trong tay bạn rồi.
+        </p>
+
+        <div className="bg-white/20 p-4 rounded-2xl border border-green-500/30">
+          <p className="font-bold text-xs mb-2 tracking-wide text-center">✨ CÔNG THỨC CHIẾN THẮNG:</p>
+          <div className="flex justify-between items-center text-xs font-medium">
+            <span className="bg-green-500/20 px-2 py-1 rounded">Môn 3 Tín: ${requiredGpa.toFixed(1)}</span>
+            <ArrowRight className="w-3 h-3 text-green-400" />
+            <span className="bg-green-500/20 px-2 py-1 rounded">Môn 2 Tín: ${(requiredGpa - 0.2).toFixed(1)}</span>
+          </div>
         </div>
+
+        <p className="text-[11px] opacity-80 text-center italic leading-relaxed">
+          "Phong độ là nhất thời, GPA là mãi mãi." Đừng để deadline hay crush làm xao nhãng nhé!
+        </p>
       </div>
     `);
   }
-  };
-
+};
   return (
     <div className="min-h-screen pb-10 pt-20 md:pt-28 px-4 bg-[#f8fafc]">
       <Navigation />
