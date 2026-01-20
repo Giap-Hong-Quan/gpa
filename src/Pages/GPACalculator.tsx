@@ -112,16 +112,20 @@ export default function GPACalculator() {
       <Navigation />
 
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8 md:mb-12 space-y-3">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
-              Tính GPA Mục Tiêu
-            </h1>
-            <p className="text-sm md:text-lg text-slate-500 max-w-2xl mx-auto px-4">
-              Lên kế hoạch học tập chi tiết để đạt được tấm bằng mơ ước.
-            </p>
-          </motion.div>
-        </div>
+      <div className="text-center mb-10 md:mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }} 
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-0" 
+        >
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 leading-tight">
+            Tính GPA Mục Tiêu
+          </h1>
+          <p className="text-sm md:text-lg text-slate-500 max-w-2xl mx-auto px-6">
+            Lên kế hoạch học tập chi tiết để đạt được tấm bằng mơ ước.
+          </p>
+        </motion.div>
+      </div>
 
         <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
           {/* PHẦN NHẬP LIỆU */}
