@@ -165,9 +165,9 @@ const handleCalculate = (e: React.FormEvent) => {
         <motion.div 
           initial={{ opacity: 0, y: 10 }} 
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-0" 
+          className="relative z-0 mt-10 md:mt-0" 
         >
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 leading-tight">
+          <h1 className="text-3xl md:text-5xl  lg:text-6xl font-extrabold text-slate-800 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 leading-tight">
             Tính GPA Mục Tiêu
           </h1>
           <p className="text-sm md:text-lg text-slate-500 max-w-2xl mx-auto px-6">
