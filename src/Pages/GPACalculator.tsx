@@ -70,9 +70,9 @@ const handleCalculate = (e: React.FormEvent) => {
 
   const maxGrade = system === 4 ? 4.0 : 10.0;
   
-  // Gợi ý mục tiêu môn học cụ thể
-  const suggest3 = Math.min(maxGrade, requiredGpa + 0.1).toFixed(2);
-  const suggest2 = Math.max(0, requiredGpa - 0.2).toFixed(2);
+  // // Gợi ý mục tiêu môn học cụ thể
+  // const suggest3 = Math.min(maxGrade, requiredGpa + 0.1).toFixed(2);
+  // const suggest2 = Math.max(0, requiredGpa - 0.2).toFixed(2);
 
   // --- PHÂN LOẠI KẾT QUẢ VÀ HIỂN THỊ ---
 
