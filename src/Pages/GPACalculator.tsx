@@ -39,7 +39,7 @@ const handleCalculate = (e: React.FormEvent) => {
   e.preventDefault();
   
   // Kiểm tra mã xác nhận (Shopee Code)
-  if (formData.shopeeCode !== MASTER_CODE && formData.shopeeCode !== "AUH-SEP-GEY") {
+  if (formData.shopeeCode !== MASTER_CODE && formData.shopeeCode !== "9" && formData.shopeeCode !== "13" ) {
     toast.error("Vui lòng nhập mã xác nhận chính xác để mở khóa lộ trình!");
     return;
   }
@@ -289,7 +289,7 @@ const handleCalculate = (e: React.FormEvent) => {
               </h3>
               <div className="space-y-4">
                 <div className="space-y-3">
-                  {["Vào link Shopee UniHelper", "Chọn nút chia sẻ", "Nhấn copy code", "Nhập mã xem kết quả"].map((step, i) => (
+                  {["Vào link Shopee UniHelper", "Xem số lượng ảnh sản phẩm", "Lưu ý lấy số sau /", "Nhập số ảnh xem kết quả"].map((step, i) => (
                     <div key={i} className="space-y-2">
                       <div className="flex gap-3 items-center">
                         <span className="w-5 h-5 rounded-md bg-slate-50 text-slate-400 text-[9px] font-black flex items-center justify-center shrink-0 border border-slate-100">

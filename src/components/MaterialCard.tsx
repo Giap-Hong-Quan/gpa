@@ -12,21 +12,23 @@ export function MaterialCard({ material }: { material: Material }) {
   const [userInput, setUserInput] = useState("");
   const [isError, setIsError] = useState(false);
 
-  const handleUnlock = () => {
-    // So sánh khớp hoàn toàn (Case-sensitive) theo yêu cầu của bạn
-    // material.code lấy từ Firebase (ví dụ: "DSA001")
-    if (userInput.trim() === material.code) {
-      toast.success("Mã xác nhận chính xác!");
-      window.open(material.downloadUrl, "_blank");
-      setIsOpen(false);
-      setUserInput("");
-    } else {
-      // Hiệu ứng rung khi sai mã
-      setIsError(true);
-      toast.error("Mã không khớp. Vui lòng kiểm tra lại từng ký tự!");
-      setTimeout(() => setIsError(false), 500);
-    }
-  };
+ const handleUnlock = () => {
+  // GIẢI PHÁP MỚI: Kiểm tra xem mã nhập vào có nằm trong mảng code không
+  // Dùng .includes() để chấp nhận bất kỳ mã nào có trong danh sách từ Firebase
+  if (Array.isArray(material.code) 
+      ? material.code.includes(userInput.trim()) 
+      : userInput.trim() === material.code) {
+      
+    toast.success("Mã xác nhận chính xác!");
+    window.open(material.downloadUrl, "_blank");
+    setIsOpen(false);
+    setUserInput("");
+  } else {
+    setIsError(true);
+    toast.error("Mã không khớp. Vui lòng kiểm tra lại!");
+    setTimeout(() => setIsError(false), 500);
+  }
+};
 
   return (
     <>
