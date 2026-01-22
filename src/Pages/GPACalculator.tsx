@@ -39,7 +39,7 @@ const handleCalculate = (e: React.FormEvent) => {
   e.preventDefault();
   
   // Kiểm tra mã xác nhận (Shopee Code)
-  if (formData.shopeeCode !== MASTER_CODE && formData.shopeeCode !== "9" && formData.shopeeCode !== "13" ) {
+  if (formData.shopeeCode !== MASTER_CODE && formData.shopeeCode !== "9" && formData.shopeeCode !== "12" ) {
     toast.error("Vui lòng nhập mã xác nhận chính xác để mở khóa lộ trình!");
     return;
   }
