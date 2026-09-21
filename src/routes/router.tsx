@@ -1,11 +1,9 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import GPACalculator from '../Pages/GPACalculator';
-import StudyMaterials from '../Pages/StudyMaterials';
-const router =createBrowserRouter(
-    [
-        {path: "/",element: <GPACalculator />},
-        {path: "/study-material",element: <StudyMaterials/> },
 
-    ]
-)
-export default router
+const router = createBrowserRouter([
+  { path: '/', element: <GPACalculator /> },
+  { path: '*', element: <Navigate to="/" replace /> },
+]);
+
+export default router;
