@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Calculator, 
@@ -65,32 +65,10 @@ export default function GPACalculator() {
     cumulativeGpa: 3.0333,
   });
 
-  // Cơ chế: Mỗi lần load/mở trang, click hoặc chạm đầu tiên sẽ mở tab Shopee
-  // Trong cùng một lượt xem trang đó, các click tiếp theo không bị mở lại
-  // Khi load lại trang (F5) thì sẽ được tính lại từ đầu
-  useEffect(() => {
-    let hasTriggered = false;
-
-    const handleFirstClick = () => {
-      if (hasTriggered) return;
-      hasTriggered = true;
-
-      // Mở link Shopee ở tab mới (gắn trực tiếp với click của người dùng nên 100% không bị chặn)
-      window.open("https://s.shopee.vn/6L4blHqS7v", "_blank", "noopener,noreferrer");
-
-      // Huỷ lắng nghe sau lần click đầu tiên của lượt load trang này
-      window.removeEventListener("click", handleFirstClick);
-      window.removeEventListener("touchstart", handleFirstClick);
-    };
-
-    window.addEventListener("click", handleFirstClick, { once: true });
-    window.addEventListener("touchstart", handleFirstClick, { once: true });
-
-    return () => {
-      window.removeEventListener("click", handleFirstClick);
-      window.removeEventListener("touchstart", handleFirstClick);
-    };
-  }, []);
+  // Cơ chế: Mỗi lần load/mở trang, click hoặc chạm đầu tiên trên điện thoại hay máy tính đều mở Shopee
+  // Sau lần chạm đầu tiên, overlay biến mất để người dùng thao tác tính điểm bình thường.
+  // F5 / load lại trang sẽ reset để chạm tiếp.
+  const [hasTriggered, setHasTriggered] = useState(false);
 
   const handleCumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCumInputs({
@@ -156,6 +134,19 @@ export default function GPACalculator() {
   return (
     <div className="min-h-screen pb-20 pt-24 md:pt-28 lg:pt-32 px-4 bg-[#f8fafc]">
       <Navigation />
+
+      {/* Lớp phủ liên kết trong suốt: Chạm/click đầu tiên trên điện thoại hay máy tính đều mở Shopee 100% không bị chặn */}
+      {!hasTriggered && (
+        <a
+          href="https://s.shopee.vn/6L4blHqS7v"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setHasTriggered(true)}
+          className="fixed inset-0 z-50 bg-transparent cursor-pointer"
+          style={{ WebkitTapHighlightColor: "transparent" }}
+          aria-label="Khám phá ưu đãi Shopee"
+        />
+      )}
 
       <div className="max-w-6xl mx-auto">
         {/* Header Title */}
