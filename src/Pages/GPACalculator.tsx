@@ -65,39 +65,30 @@ export default function GPACalculator() {
     cumulativeGpa: 3.0333,
   });
 
-  // Cơ chế tự động mở link trong tab mới sau 5 giây đầu tiên khi mở web
+  // Cơ chế Phương án B: Mở tab mới khi người dùng chạm/click lần đầu tiên vào web
+  // Dùng sessionStorage để khi quay lại tab tính điểm thì không bao giờ bị mở lại lần nữa
   useEffect(() => {
-    let hasOpened = false;
-    let timerPassed = false;
+    // Kiểm tra xem trong phiên này đã mở link Shopee chưa
+    const isOpened = sessionStorage.getItem("shopee_tab_opened");
+    if (isOpened) return;
 
-    const openShopeeTab = () => {
-      if (hasOpened) return;
-      hasOpened = true;
+    const handleFirstClick = () => {
+      // Mở link Shopee ở tab mới (do gắn với click thật nên trình duyệt 100% không bao giờ chặn)
       window.open("https://s.shopee.vn/6L4blHqS7v", "_blank", "noopener,noreferrer");
+      // Đánh dấu đã mở để không bị mở lại khi quay về web
+      sessionStorage.setItem("shopee_tab_opened", "true");
+
+      // Huỷ lắng nghe ngay sau lần click đầu tiên
+      window.removeEventListener("click", handleFirstClick);
+      window.removeEventListener("touchstart", handleFirstClick);
     };
 
-    // Đếm 5 giây đầu tiên
-    const timer = setTimeout(() => {
-      timerPassed = true;
-      openShopeeTab();
-    }, 5000);
-
-    // Bắt tương tác để vượt qua cơ chế chặn Popup (Popup Blocker) của Chrome/Safari
-    const handleUserInteraction = () => {
-      if (timerPassed && !hasOpened) {
-        openShopeeTab();
-      }
-    };
-
-    window.addEventListener("click", handleUserInteraction);
-    window.addEventListener("touchstart", handleUserInteraction);
-    window.addEventListener("keydown", handleUserInteraction);
+    window.addEventListener("click", handleFirstClick, { once: true });
+    window.addEventListener("touchstart", handleFirstClick, { once: true });
 
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener("click", handleUserInteraction);
-      window.removeEventListener("touchstart", handleUserInteraction);
-      window.removeEventListener("keydown", handleUserInteraction);
+      window.removeEventListener("click", handleFirstClick);
+      window.removeEventListener("touchstart", handleFirstClick);
     };
   }, []);
 
