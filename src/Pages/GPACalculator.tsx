@@ -65,20 +65,20 @@ export default function GPACalculator() {
     cumulativeGpa: 3.0333,
   });
 
-  // Cơ chế Phương án B: Mở tab mới khi người dùng chạm/click lần đầu tiên vào web
-  // Dùng sessionStorage để khi quay lại tab tính điểm thì không bao giờ bị mở lại lần nữa
+  // Cơ chế: Mỗi lần load/mở trang, click hoặc chạm đầu tiên sẽ mở tab Shopee
+  // Trong cùng một lượt xem trang đó, các click tiếp theo không bị mở lại
+  // Khi load lại trang (F5) thì sẽ được tính lại từ đầu
   useEffect(() => {
-    // Kiểm tra xem trong phiên này đã mở link Shopee chưa
-    const isOpened = sessionStorage.getItem("shopee_tab_opened");
-    if (isOpened) return;
+    let hasTriggered = false;
 
     const handleFirstClick = () => {
-      // Mở link Shopee ở tab mới (do gắn với click thật nên trình duyệt 100% không bao giờ chặn)
-      window.open("https://s.shopee.vn/6L4blHqS7v", "_blank", "noopener,noreferrer");
-      // Đánh dấu đã mở để không bị mở lại khi quay về web
-      sessionStorage.setItem("shopee_tab_opened", "true");
+      if (hasTriggered) return;
+      hasTriggered = true;
 
-      // Huỷ lắng nghe ngay sau lần click đầu tiên
+      // Mở link Shopee ở tab mới (gắn trực tiếp với click của người dùng nên 100% không bị chặn)
+      window.open("https://s.shopee.vn/6L4blHqS7v", "_blank", "noopener,noreferrer");
+
+      // Huỷ lắng nghe sau lần click đầu tiên của lượt load trang này
       window.removeEventListener("click", handleFirstClick);
       window.removeEventListener("touchstart", handleFirstClick);
     };
