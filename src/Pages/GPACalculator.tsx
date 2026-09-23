@@ -11,7 +11,10 @@ import {
   Award,
   Sparkles,
   Layers,
-  BarChart3
+  BarChart3,
+  KeyRound,
+  ShoppingBag,
+  ExternalLink
 } from "lucide-react";
 import { Navigation } from "../components/Navigation";
 import { toast } from "sonner";
@@ -65,10 +68,8 @@ export default function GPACalculator() {
     cumulativeGpa: 3.0333,
   });
 
-  // Cơ chế: Mỗi lần load/mở trang, click hoặc chạm đầu tiên trên điện thoại hay máy tính đều mở Shopee
-  // Sau lần chạm đầu tiên, overlay biến mất để người dùng thao tác tính điểm bình thường.
-  // F5 / load lại trang sẽ reset để chạm tiếp.
-  const [hasTriggered, setHasTriggered] = useState(false);
+  // Mã kích hoạt để tính toán
+  const [accessCode, setAccessCode] = useState("");
 
   const handleCumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCumInputs({
@@ -79,6 +80,12 @@ export default function GPACalculator() {
 
   const handleCalculateCumulative = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+
+    // Kiểm tra mã xác thực: bắt buộc phải nhập mã mới cho tính điểm
+    if (!accessCode.trim()) {
+      toast.error("Vui lòng nhập mã để mở khóa tính toán! Nhấn nút 'Lấy mã' bên dưới để nhận mã miễn phí.");
+      return;
+    }
 
     const curGpa = parseFloat(cumInputs.currentGpa.replace(",", "."));
     const curCredits = parseFloat(cumInputs.completedCredits);
@@ -127,6 +134,7 @@ export default function GPACalculator() {
       newGpa: "",
       newCredits: "",
     });
+    setAccessCode("");
     setCumResult(null);
     toast.info("Đã làm mới các trường nhập liệu");
   };
@@ -134,19 +142,6 @@ export default function GPACalculator() {
   return (
     <div className="min-h-screen pb-20 pt-24 md:pt-28 lg:pt-32 px-4 bg-[#f8fafc]">
       <Navigation />
-
-      {/* Lớp phủ liên kết trong suốt: Chạm/click đầu tiên trên điện thoại hay máy tính đều mở Shopee 100% không bị chặn */}
-      {!hasTriggered && (
-        <a
-          href="https://s.shopee.vn/AUuDpAmUVN"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => setHasTriggered(true)}
-          className="fixed inset-0 z-50 bg-transparent cursor-pointer"
-          style={{ WebkitTapHighlightColor: "transparent" }}
-          aria-label="Khám phá ưu đãi Shopee"
-        />
-      )}
 
       <div className="max-w-6xl mx-auto">
         {/* Header Title */}
@@ -252,6 +247,47 @@ export default function GPACalculator() {
                   </p>
                 </div>
 
+                {/* Dòng nhập mã mở khoá tính toán */}
+                <div className="space-y-2 p-4 rounded-2xl bg-amber-50/80 border border-amber-200">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs md:text-sm font-bold text-amber-900 flex items-center gap-1.5">
+                      <KeyRound className="w-4 h-4 text-amber-600" />
+                      Mã xác nhận tính điểm: <span className="text-rose-500">*</span>
+                    </label>
+                    <a
+                      href="https://s.shopee.vn/AUuDpAmUVN"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] md:text-xs font-bold text-[#ee4d2d] hover:underline"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      Lấy mã ngay
+                    </a>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={accessCode}
+                      onChange={(e) => setAccessCode(e.target.value)}
+                      placeholder="Dán mã đã sao chép từ Shopee vào đây..."
+                      className="flex-1 p-3 md:p-3.5 bg-white border-2 border-amber-200 focus:border-amber-500 focus:outline-none rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 transition-all"
+                    />
+                    <a
+                      href="https://s.shopee.vn/AUuDpAmUVN"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-3 bg-[#ee4d2d] hover:bg-[#d73211] text-white text-xs md:text-sm font-bold rounded-xl flex items-center gap-1.5 shadow-md shadow-orange-500/20 active:scale-95 transition-all whitespace-nowrap cursor-pointer"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>Lấy mã</span>
+                      <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                    </a>
+                  </div>
+                  <p className="text-[11px] text-amber-800/80 font-medium">
+                    💡 Bạn cần nhập mã để mở khoá tính toán. Xem các bước lấy mã miễn phí ở ngay bên dưới.
+                  </p>
+                </div>
+
                 {/* Nút hành động */}
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <button
@@ -270,6 +306,112 @@ export default function GPACalculator() {
                   </button>
                 </div>
               </form>
+            </div>
+
+            {/* HƯỚNG DẪN LẤY MÃ MIỄN PHÍ TRÊN SHOPEE */}
+            <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-7 shadow-sm border border-slate-100 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                  <HelpCircle className="w-5 h-5 text-indigo-600" />
+                  Hướng dẫn lấy mã miễn phí trên Shopee
+                </h3>
+                <span className="text-[11px] font-bold px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full">
+                  Miễn phí 100%
+                </span>
+              </div>
+
+              {/* Các bước hướng dẫn */}
+              <div className="space-y-3 text-xs md:text-sm text-slate-600">
+                <div className="flex items-start gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">
+                    1
+                  </span>
+                  <p className="pt-0.5">
+                    Bấm vào nút <strong className="text-[#ee4d2d]">"Lấy mã"</strong> màu cam ở ô nhập phía trên hoặc nút bên dưới để mở Shopee.
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">
+                    2
+                  </span>
+                  <p className="pt-0.5">
+                    Trên Shopee, nhấn vào biểu tượng <strong>Chia sẻ (Mũi tên ở góc phải trên cùng)</strong> như trong <strong className="text-indigo-600">Hình 1</strong>.
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">
+                    3
+                  </span>
+                  <p className="pt-0.5">
+                    Chọn mục <strong>"Copy Code" (Sao chép mã)</strong> như trong <strong className="text-indigo-600">Hình 2</strong> để hệ thống tự động copy mã vào bộ nhớ tạm.
+                  </p>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">
+                    4
+                  </span>
+                  <p className="pt-0.5">
+                    Quay lại trang web này, <strong>Dán mã</strong> vừa lấy vào ô <em>"Mã xác nhận tính điểm"</em> và bấm nút <strong>"Tính toán"</strong>.
+                  </p>
+                </div>
+              </div>
+
+              {/* Nút to mở Shopee lấy mã */}
+              <div className="pt-1">
+                <a
+                  href="https://s.shopee.vn/AUuDpAmUVN"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3.5 px-4 bg-gradient-to-r from-[#ee4d2d] to-[#ff5722] hover:opacity-95 text-white font-bold rounded-xl md:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all text-sm md:text-base cursor-pointer"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  <span>BẤM VÀO ĐÂY ĐỂ QUA SHOPEE LẤY MÃ</span>
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+
+              {/* 2 Ảnh hướng dẫn */}
+              <div className="pt-2">
+                <p className="text-xs font-bold text-slate-700 mb-2.5">
+                  📸 Hình ảnh minh họa thao tác trên Shopee:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {/* Hình 1 */}
+                  <div className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50 p-2.5 flex flex-col">
+                    <div className="text-[11px] font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">1</span>
+                      <span>Hình 1: Bấm biểu tượng mũi tên chia sẻ</span>
+                    </div>
+                    <div className="relative rounded-lg overflow-hidden border border-slate-200 bg-white">
+                      <img
+                        src="/guide-step-1.png"
+                        alt="Hình 1: Nhấn biểu tượng mũi tên chia sẻ trên Shopee"
+                        className="w-full h-auto object-contain hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Hình 2 */}
+                  <div className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50 p-2.5 flex flex-col">
+                    <div className="text-[11px] font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">2</span>
+                      <span>Hình 2: Chọn mục Copy Code</span>
+                    </div>
+                    <div className="relative rounded-lg overflow-hidden border border-slate-200 bg-white">
+                      <img
+                        src="/guide-step-2.png"
+                        alt="Hình 2: Chọn mục Copy Code để lấy mã"
+                        className="w-full h-auto object-contain hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
