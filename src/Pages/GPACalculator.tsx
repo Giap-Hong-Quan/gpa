@@ -138,7 +138,7 @@ export default function GPACalculator() {
       {/* Lớp phủ liên kết trong suốt: Chạm/click đầu tiên trên điện thoại hay máy tính đều mở Shopee 100% không bị chặn */}
       {!hasTriggered && (
         <a
-          href="https://s.shopee.vn/6L4blHqS7v"
+          href="https://s.shopee.vn/AUuDpAmUVN"
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => setHasTriggered(true)}
